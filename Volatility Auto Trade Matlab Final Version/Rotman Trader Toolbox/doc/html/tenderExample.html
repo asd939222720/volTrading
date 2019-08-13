@@ -1,0 +1,718 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Accepting/Declining Tender Offers with Rotman Intractive Trader</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-02-08"><meta name="DC.source" content="tenderExample.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Accepting/Declining Tender Offers with Rotman Intractive Trader</h1><!--introduction--><p>This example shows how to use the rotmanTrader functions to connect to and accept/decline tender offers through Rotman Interactive Trader (RIT). RIT must be installed on your computer along with the Excel&reg; RTD Links. For more information visit <a href="http://rit.rotman.utoronto.ca/software.asp">http://rit.rotman.utoronto.ca/software.asp</a>. This example also assumes that RIT is running Liability Trading 3 Case.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create a Connection</a></li><li><a href="#3">Get Active Tender and Info</a></li><li><a href="#5">Accept the Tender Offer</a></li><li><a href="#6">Wait for Another Tender Offer</a></li><li><a href="#9">Using <tt>subscribe</tt> for Tender Info</a></li><li><a href="#12">Automating Tender Acceptance/Rejection</a></li><li><a href="#13">My Strategy</a></li><li><a href="#18">Watch Strategy Run</a></li><li><a href="#19">Cleaning Up</a></li></ul></div><h2 id="1">Create a Connection</h2><p>First create a connection to Rotman Interactive Trader and list the functions (methods) available.</p><pre class="codeinput">rit = rotmanTrader;
+methods(rit)
+</pre><pre class="codeoutput">
+Methods for class rotmanTrader:
+
+acceptActiveTender   declineActiveTender  removeUpdateFcn      
+addOrder             delete               restartTimer         
+addUpdateFcn         getActiveTenderInfo  rotmanTrader         
+addprop              getActiveTenders     sell                 
+blotterOrder         getOrderInfo         stopUpdates          
+buy                  getOrders            subscribe            
+cancelOrder          getSubscriptions     unsubscribe          
+cancelOrderExpr      getTickerInfo        update               
+cancelQueuedOrder    isOrderQueued        
+clearQueuedOrders    limitOrder           
+
+Call "methods('handle')" for methods of rotmanTrader inherited from handle.
+
+</pre><p>To get more information on the functions, type help or doc and the name of the function.  For example:</p><pre class="codeinput">help <span class="string">rotmanTrader</span>
+help <span class="string">rotmanTrader/subscribe</span>
+help <span class="string">rotmanTrader/getActiveTender</span>
+help <span class="string">rotmanTrader/getActiveTenderInfo</span>
+help <span class="string">rotmanTrader/AcceptActiveTender</span>
+help <span class="string">rotmanTrader/DeclineActiveTender</span>
+</pre><pre class="codeoutput"> ROTMANTRADER connects MATLAB(R) to Rotman Interactive Trader
+ 
+    RIT = ROTMANTRADER will create a connection to the Rotman
+    Interactive Trader API using the path specified in the Windows
+    System registry.
+ 
+    RIT = ROTMANTRADER(DLLPATH) connects to Rotman Interactive Trader
+    through the DLLPATH specified.  This allows connection to different
+    dll locations.
+ 
+    A connection is required to trade from MATLAB through Rotman
+    Interactive Trader.
+ 
+    Example:
+    rit = rotmanTrader
+ 
+    See also: buy, sell, limitOrder, blotterOrder, addOrder
+
+    Reference page in Doc Center
+       doc rotmanTrader
+
+
+ SUBSCRIBE adds topic to subscription from RIT
+ 
+    SUBSCRIBE(RIT,NEWTOPICS) adds the topics defined in
+    NEWTOPICS to the topics available from Rotman Interactive
+    Trader defined in RIT connection object.  NEWTOPICS can be
+    a cell array or table of topics.  Available topics are
+    listed below, and can also be found in the RTD link in
+    Rotman Interactive Trader.
+ 
+    NEWTOPICS can be defined as a string or cell array of
+    strings as FIELD1|FIELD2|FIELD3 using | separators as
+    needed fore each field.  See below for field definitions.
+ 
+    If NEWTOPICS is a table, it must contain variable names of
+    Field1, Field2, and Field3 with the contents defined as
+    strings.
+ 
+    If NEWTOPICS is a cell array, it must be a cell array of
+    strings of dimensions R x 1 where each cell along R is
+    defined as {'FIELD1','FIELD2','FIELD3'}.
+ 
+    TOPICS Available for Subscription in Rotman Interactive
+    Trader
+ 
+    FIELD1|FIELD2|FIELD3    DESCRIPTION
+    General
+    TRADERID                Trader's trader ID
+    PL                      Overall Trader's P/L
+    TRADERNAME              Name
+    TIMEREMAINING           Time remaining in the period
+    PERIOD                  The period # that is running
+    YEARTIME                Ticks in a year
+    TIMESPEED               Speed game is currently running
+ 
+    Asset Information
+    ALLASSETTICKERS         Comma-delimited list of all asset tickers
+    ALLASSETTICKERINFO      Table of all asset tickers and detailed info
+ 
+    Security Information
+    ALLTICKERS              Comma-delimited list of all security tickers
+    ALLTICKERINFO           Table of all security tickers and detailed info
+    TICKER|LAST             Last
+    TICKER|BID              Bid
+    TICKER|ASK              Ask
+    TICKER|VOLUME           Volume
+    TICKER|POSITION         Position
+    TICKER|MKTSELL|N        The VWAP that would occur if you send an order to market sell N volume
+    TICKER|MKTBUY|N         The VWAP that would occur if you send an order to market buy N volume
+    TICKER|COST             VWAP
+    TICKER|PLUNR            Unrealized P/L
+    TICKER|PLREL            Realized P/L
+    TICKER|BIDBOOK          Book view, bid side
+    TICKER|ASKBOOK          Book view, ask side
+    TICKER|OPENORDERS       Open personal orders to buy/sell
+    TICKER|ALLORDERS        All personal orders to buy/sell
+    TICKER|BID|N            The Nth bid in the book
+    TICKER|BSZ|N            The size of the Nth bid in the book
+    TICKER|ASK|N            The Nth ask in the book
+    TICKER|ASZ|N            The size of the Nth ask in the book
+    TICKER|AGBID|N          The aggregate (by price) Nth bid in the book
+    TICKER|AGBSZ|N          The size of the aggregate (by price) Nth bid in the book
+    TICKER|AGASK|N          The aggregate (by price) Nth ask in the book
+    TICKER|AGASZ|N          The size of the aggregate (by price) Nth ask in the book
+    TICKER|INTERESTRATE     The currency interest rate
+    TICKER|LIMITORDERS      The number of live limit orders
+ 
+    Tender Information
+    TENDERINFO|N            (N&gt;) Tender offers awaiting response (id, ticker, quantity, price, tick recieved, expiry tick)              
+    
+    Historical Information
+    TICKER|LASTHIST|N       (N&gt;0) Historical last value (current period) at Nth tick
+    TICKER|LASTHIST|N       (N&lt;=0) Historical last value (current period) |N| ticks ago
+ 
+    News Information
+    NEWS|N                  Nth news item, most recent last
+    LATESTNEWS|N            Nth news item, most recent first
+ 
+    Example:
+    % create a connection
+    rit = rotmanTrader
+    % subscribe to the last price of CRZY using cell notation
+    subscribe(rit,{{'CRZY','LAST'}}) % --&gt; note the use of double {{}} for single entry!!!
+    % subscribe to bid prices for TAME using | separators
+    subscribe(rit,'TAME|BID|10')
+    % subscribe using cell definition for TAME and CRZY
+    subscribe(rit,{{'TAME','BID','20'}; {'CRZY','BID','10'}})
+    % subscribe using a table
+    tbl = cell2table({'TAME','ASK','20';'CRZY','ASK','10'},...
+                 'VariableNames',{'Field1','Field2','Field3'});
+    subscribe(rit,tbl)
+    % call update to refresh the data
+    update(rit);
+    rit
+ 
+    See also: rotmanTrader, unsubscribe, update
+
+
+rotmanTrader/getActiveTender not found.
+
+Use the Help browser search field to search the documentation, or
+type "help help" for help command options, such as help for methods.
+
+ GETACTIVETENDERINFO returns info on requested active tender
+ 
+    T = GETACTIVETENDERINFO(RIT,ID) returns a table of
+    information on the requested tender offer.  Table T
+    contains
+ 
+        Tender ID, Ticker, Quantity, Price, Received Tick,
+        Expiry Tick
+ 
+    Example:
+    rit = rotmanTrader;
+    ids = getActiveTenders(rit);
+    T = getActiveTenderInfo(rit,ids(1));
+ 
+    See also: getActiveTenders, acceptActiveTender,
+    declineActiveTender
+
+ ACCEPTACTIVETENDER accepts the tender offer indicated by ID
+ 
+    TF = ACCEPTACTIVETENDER(RIT, ID, BID) accepts the tender offer
+    indicated by ID.  BID must be specified when sending a
+    command to accept the offer.  However, if the tender has a
+    set bid, then this value will be ignored.  If successful,
+    the return value will be TRUE.  Otherwise FALSE.
+ 
+    Example:
+    rit = rotmanTrader;
+    ids = getActiveTenders(rit);
+    tf = acceptActiveTender(rit,ids,10.00);
+ 
+    See also: getActiveTenderInfo, acceptActiveTender,
+    declineActiveTender
+
+ DECLINEACTIVETENDER decline the tender offer indicated by ID
+ 
+    TF = DECLINEACTIVETENDER(RIT, ID) accepts the tender offer
+    indicated by ID.  BID must be specified when sending a
+    command to accept the offer.  However, if the tender has a
+    set bid, then this value will be ignored.  If successful,
+    the return value will be TRUE.  Otherwise FALSE.
+ 
+    Example:
+    rit = rotmanTrader;
+    ids = getActiveTenders(rit);
+    tf = declineActiveTender(rit,ids);
+ 
+    See also: getActiveTenderInfo, acceptActiveTender,
+    getActiveTenders
+
+</pre><h2 id="3">Get Active Tender and Info</h2><p>Wait for a tender offer and then retrieve the tender info.</p><pre class="codeinput">haveTenderOffer = false;
+<span class="keyword">while</span> ~haveTenderOffer
+    id = getActiveTenders(rit);
+    <span class="keyword">if</span> id ~= 0 <span class="comment">% have offer so break out of loop</span>
+        haveTenderOffer = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+display(id)
+</pre><pre class="codeoutput">
+id =
+
+     3
+
+</pre><p>Now get the tender info</p><pre class="codeinput">tender = getActiveTenderInfo(rit,id)
+</pre><pre class="codeoutput">
+tender =
+
+  1&times;6 table
+
+    TenderID    Ticker    Quantity    Price    ReceivedTick    ExpiryTick
+    ________    ______    ________    _____    ____________    __________
+
+       3        'TAME'     -67000     24.75         50             81    
+
+</pre><h2 id="5">Accept the Tender Offer</h2><p>Set a bid price at 90% of tender info price.  If this offer has a set bid, bid will be ignored, but an entry is still required</p><pre class="codeinput">bid = tender.Price*0.9;
+tf = acceptActiveTender(rit,id,bid)
+</pre><pre class="codeoutput">
+tf =
+
+  logical
+
+   1
+
+</pre><h2 id="6">Wait for Another Tender Offer</h2><p>We will wait for another tender, then decline the offer Wait for a tender offer and then retrieve the tender info.</p><pre class="codeinput">haveTenderOffer = false;
+<span class="keyword">while</span> ~haveTenderOffer
+    id = getActiveTenders(rit);
+    <span class="keyword">if</span> id ~= 0 <span class="comment">% have offer so break out of loop</span>
+        haveTenderOffer = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+display(id)
+</pre><pre class="codeoutput">
+id =
+
+   803
+
+</pre><p>Now get the tender info</p><pre class="codeinput">tender = getActiveTenderInfo(rit,id)
+</pre><pre class="codeoutput">
+tender =
+
+  1&times;6 table
+
+    TenderID    Ticker    Quantity    Price    ReceivedTick    ExpiryTick
+    ________    ______    ________    _____    ____________    __________
+
+      803       'TAME'     77000      24.52        107            138    
+
+</pre><p>and decline it</p><pre class="codeinput">tf = declineActiveTender(rit,id)
+</pre><pre class="codeoutput">
+tf =
+
+  logical
+
+   1
+
+</pre><h2 id="9">Using <tt>subscribe</tt> for Tender Info</h2><p>You can also use the subscribe function to add the tender info to the rit object as a property.  You need to first know the tender ID.</p><pre class="codeinput">haveTenderOffer = false;
+<span class="keyword">while</span> ~haveTenderOffer
+    id = getActiveTenders(rit);
+    <span class="keyword">if</span> id ~= 0 <span class="comment">% have offer so break out of loop</span>
+        haveTenderOffer = true;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+display(id)
+</pre><pre class="codeoutput">
+id =
+
+        1603
+
+</pre><p>Now subscribe to get the info for the tender offer.  Note that N in the subscription field always returns the current, if available, tender offer.</p><pre class="codeinput">subscribe(rit,<span class="string">'TENDERINFO|1'</span>)
+rit
+</pre><pre class="codeoutput">
+rit = 
+
+  rotmanTrader with properties:
+
+            updateFreq: 2
+            lastUpdate: '08-Feb-2018 12:26:33'
+           updateTimer: [1&times;1 timer]
+            updateFcns: {}
+            traderName: 'Stuart kozola'
+              traderID: 'stu'
+         timeRemaining: 142
+                period: 1
+              yearTime: 15600
+             timeSpeed: 1
+       allAssetTickers: ''
+    allAssetTickerInfo: ''
+            allTickers: {'CRZY'  'TAME'}
+         allTickerInfo: {2&times;6 cell}
+                    pl: -8040
+          tenderinfo_1: '1603,TAME,63000,25.08,157,188'
+
+</pre><p>show the info</p><pre class="codeinput">rit.(<span class="string">'tenderinfo_1'</span>)
+</pre><pre class="codeoutput">
+ans =
+
+    '1603,TAME,63000,25.08,157,188'
+
+</pre><h2 id="12">Automating Tender Acceptance/Rejection</h2><p>To automate the response to a tender offer, create a function that responds to the tender offer event.  This follows examples from working with streaming data in <tt>streamingDataExample</tt>.</p><p>tenderinfo is already available in rit, as tenderinfo_1, so we can use that property to trigger an action.</p><p>Let's create a strategy to accept or reject the tender offer based on the current bid/ask price and the tender offer price.</p><p>First let's subscribe to CRZY and TAME's bid/ask prices</p><pre class="codeinput">subscribe(rit,{<span class="string">'CRZY|BID'</span>;<span class="string">'CRZY|ASK'</span>;<span class="string">'TAME|BID'</span>;<span class="string">'TAME|ASK'</span>})
+</pre><h2 id="13">My Strategy</h2><p>Create a buy/sell tender offer strategy in <tt>myTenderStrategy</tt>.  The function is</p><pre class="codeinput">type <span class="string">myTenderStrategy</span>
+</pre><pre class="codeoutput">
+function myTenderStrategy(input)
+%% My Tender Trading Strategy
+% Simple but illustrative example% extract the inormation in the tender
+% offer when a change is detected.  Input is a |rotmanTrader| object.
+%
+%   Example:
+%   rit = rotmanTrader;
+%   subscribe(rit,{'CRZY|BID';'CRZY|ASK';'TAME|BID';'TAME|ASK'})
+%   fcn = @(input) myTenderStrategy(fcn);
+%   addUpdateFcn(rit,fcn)
+
+% Copyright 2018 The MathWorks, Inc.
+
+if ~isempty(input.tenderinfo_1)
+    % we have an offer, parse it and get the quantity/price info
+    str = input.tenderinfo_1;
+    data = strsplit(str,',');
+    T = table;
+    T.TenderID = str2num(data{1});
+    T.Ticker = data{2};
+    T.Quantity = str2num(data{3});
+    T.Price = str2num(data{4});
+    T.ReceivedTick = str2num(data{5});
+    T.ExpiryTick = str2num(data{6});
+    
+    bidVar = lower([T.Ticker,'_bid']);
+    askVar = lower([T.Ticker,'_ask']);
+    action = 'none';
+    
+    if T.Quantity &gt; 0 % Long tender
+        % accept the tender offer if the price is at or above the bid
+        if T.Price &gt;= input.(bidVar)
+            tf = acceptActiveTender(input,T.TenderID,input.(bidVar));
+            if tf
+                action = 'Accepted';
+            else
+                action = 'Rejected';
+            end
+        else % reject it
+            tf = declineActiveTender(input,T.TenderID);
+            action = 'Declined';
+        end
+    else % Short tender
+        % accept the tender offer if the price is at or above the ask
+        if T.Price &gt;= input.(askVar)
+            tf = acceptActiveTender(input,T.TenderID,input.(askVar));
+            if tf
+                action = 'Accepted';
+            else
+                action = 'Rejected';
+            end
+        else % reject it
+            tf = declineActiveTender(input,T.TenderID);
+            action = 'Declined';
+        end
+    end
+    
+    % Print out information to command window to know we've had a tender
+    % offer and took action
+    fprintf('TENDER OFFER Received for %d shares of %s at price of %3.2f\n',...
+            T.Quantity,T.Ticker,T.Price)
+    fprintf('%s is trading with bid of %3.2f and ask of %3.2f\n',...
+        T.Ticker,input.(bidVar),input.(askVar));
+    fprintf('ACTION TAKEN: %s tender offer\n\n',action);
+end
+</pre><p>What we created here was a function that will print to the command window the the action taken with each tender offer we receive. The input in this case is the <tt>rotmanTrader</tt> variable.  Let's add the cunction to <tt>rotmanTrader</tt> and watch it execute our strategy</p><pre class="codeinput">subscribe(rit,{<span class="string">'CRZY|POSITION'</span>;<span class="string">'TAME|POSITION'</span>})
+fcn = @(input) myTenderStrategy(input);
+</pre><p>Now add it to the list of updateFcns and it will be executed every time there is an update.</p><pre class="codeinput">addUpdateFcn(rit,fcn)
+rit
+</pre><pre class="codeoutput">
+rit = 
+
+  rotmanTrader with properties:
+
+            updateFreq: 2
+            lastUpdate: '08-Feb-2018 12:26:33'
+           updateTimer: [1&times;1 timer]
+            updateFcns: {'@(input)myTenderStrategy(input)'}
+            traderName: 'Stuart kozola'
+              traderID: 'stu'
+         timeRemaining: 142
+                period: 1
+              yearTime: 15600
+             timeSpeed: 1
+       allAssetTickers: ''
+    allAssetTickerInfo: ''
+            allTickers: {'CRZY'  'TAME'}
+         allTickerInfo: {2&times;6 cell}
+                    pl: -8040
+          tenderinfo_1: '1603,TAME,63000,25.08,157,188'
+              tame_ask: 24.8700
+              crzy_bid: 10.5700
+         tame_position: -67000
+              crzy_ask: 10.5800
+              tame_bid: 24.8500
+         crzy_position: 0
+
+</pre><p>We will also manage our position by reversing any open positions in the market immediately</p><pre class="codeinput">type <span class="string">myPositionManagementStrategy</span>
+</pre><pre class="codeoutput">
+function myPositionManagementStrategy(input)
+%% My Position Management Strategy
+% simple strategy that keeps inventory of all tickers to 0.   It reverse
+% any open positions in blocks of 5k shares ore fewer.
+%
+% Input is a |rotmanTrader| object, make sure we have subscribed to all
+% ticker symbols with position to use this function.
+%
+%   Example:
+%   rit = rotmanTrader;
+%   subscribe(rit,{'CRZY|POSITION';'TAME|POSITION'})
+%   fcn = @(input) myPositionManagementStrategy(input);
+%   addUpdateFcn(rit,fcn)
+
+% Copyright 2018 The MathWorks, Inc.
+
+for t = 1:length(input.allTickers)
+    position = input.([lower(input.allTickers{t}),'_position']);
+    if position ~= 0
+        if abs(position) &lt; 5000
+            shares = abs(position);
+        else
+            shares = 5000;
+        end
+        buy(input,input.allTickers{t},-sign(position)*shares);
+    fprintf('Selling %d shares of %s \n',-sign(position)*shares,input.allTickers{t});
+    end
+end
+</pre><p>Now add it to rit</p><pre class="codeinput">fcn2 = @(input) myPositionManagementStrategy(input);
+addUpdateFcn(rit,fcn2)
+rit
+</pre><pre class="codeoutput">
+rit = 
+
+  rotmanTrader with properties:
+
+            updateFreq: 2
+            lastUpdate: '08-Feb-2018 12:26:33'
+           updateTimer: [1&times;1 timer]
+            updateFcns: {1&times;2 cell}
+            traderName: 'Stuart kozola'
+              traderID: 'stu'
+         timeRemaining: 142
+                period: 1
+              yearTime: 15600
+             timeSpeed: 1
+       allAssetTickers: ''
+    allAssetTickerInfo: ''
+            allTickers: {'CRZY'  'TAME'}
+         allTickerInfo: {2&times;6 cell}
+                    pl: -8040
+          tenderinfo_1: '1603,TAME,63000,25.08,157,188'
+              tame_ask: 24.8700
+              crzy_bid: 10.5700
+         tame_position: -67000
+              crzy_ask: 10.5800
+              tame_bid: 24.8500
+         crzy_position: 0
+
+</pre><h2 id="18">Watch Strategy Run</h2><p>pause is used here to capture any offers before stopping.  Let's pause for the time remaining in this round and watch our strategy run.</p><pre class="codeinput">pause(rit.timeRemaining) <span class="comment">% check again in 10 seconds)</span>
+</pre><pre class="codeoutput">Selling 5000 shares of TAME 
+TENDER OFFER Received for 63000 shares of TAME at price of 25.08
+TAME is trading with bid of 24.85 and ask of 24.87
+ACTION TAKEN: Accepted tender offer
+
+Selling -1000 shares of TAME 
+TENDER OFFER Received for -52000 shares of TAME at price of 26.16
+TAME is trading with bid of 25.12 and ask of 25.14
+ACTION TAKEN: Accepted tender offer
+
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 2000 shares of TAME 
+TENDER OFFER Received for -67000 shares of TAME at price of 27.02
+TAME is trading with bid of 26.43 and ask of 26.45
+ACTION TAKEN: Accepted tender offer
+
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 5000 shares of TAME 
+Selling 2000 shares of TAME 
+</pre><h2 id="19">Cleaning Up</h2><p>To properly clean up, you first need to delete the <tt>rotmanTrader</tt> connection before clearing it from the workspace.  This stops the updates and disconnect from Rotman Interactive Trader.</p><pre class="codeinput">delete(rit)
+clear <span class="string">rit</span>
+</pre><p>We now no longer have a connection.</p><p class="footer">Copyright 2018 The MathWorks, Inc.<br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Accepting/Declining Tender Offers with Rotman Intractive Trader
+% This example shows how to use the rotmanTrader functions to connect to
+% and accept/decline tender offers through Rotman Interactive Trader (RIT).
+% RIT must be installed on your computer along with the Excel(R) RTD Links.
+% For more information visit http://rit.rotman.utoronto.ca/software.asp.
+% This example also assumes that RIT is running Liability Trading 3 Case.
+
+% Copyright 2018 The MathWorks, Inc.
+
+%% Create a Connection
+% First create a connection to Rotman Interactive Trader and list the
+% functions (methods) available.
+rit = rotmanTrader;
+methods(rit)
+
+%%
+% To get more information on the functions, type help or doc and the name
+% of the function.  For example:
+help rotmanTrader
+help rotmanTrader/subscribe
+help rotmanTrader/getActiveTender
+help rotmanTrader/getActiveTenderInfo
+help rotmanTrader/AcceptActiveTender
+help rotmanTrader/DeclineActiveTender
+
+%% Get Active Tender and Info
+% Wait for a tender offer and then retrieve the tender info.
+haveTenderOffer = false;
+while ~haveTenderOffer
+    id = getActiveTenders(rit);
+    if id ~= 0 % have offer so break out of loop
+        haveTenderOffer = true;
+    end
+end
+display(id)
+%%
+% Now get the tender info
+tender = getActiveTenderInfo(rit,id)
+
+%% Accept the Tender Offer
+% Set a bid price at 90% of tender info price.  If this offer has a set
+% bid, bid will be ignored, but an entry is still required
+bid = tender.Price*0.9;
+tf = acceptActiveTender(rit,id,bid)
+
+%% Wait for Another Tender Offer
+% We will wait for another tender, then decline the offer
+% Wait for a tender offer and then retrieve the tender info.
+haveTenderOffer = false;
+while ~haveTenderOffer
+    id = getActiveTenders(rit);
+    if id ~= 0 % have offer so break out of loop
+        haveTenderOffer = true;
+    end
+end
+display(id)
+%%
+% Now get the tender info
+tender = getActiveTenderInfo(rit,id)
+
+%%
+% and decline it
+tf = declineActiveTender(rit,id)
+
+%% Using |subscribe| for Tender Info
+% You can also use the subscribe function to add the tender info to the rit
+% object as a property.  You need to first know the tender ID.
+haveTenderOffer = false;
+while ~haveTenderOffer
+    id = getActiveTenders(rit);
+    if id ~= 0 % have offer so break out of loop
+        haveTenderOffer = true;
+    end
+end
+display(id)
+%%
+% Now subscribe to get the info for the tender offer.  Note that N in the
+% subscription field always returns the current, if available, tender offer.
+subscribe(rit,'TENDERINFO|1')
+rit
+%%
+% show the info
+rit.('tenderinfo_1')
+
+%% Automating Tender Acceptance/Rejection
+% To automate the response to a tender offer, create a function that
+% responds to the tender offer event.  This follows examples from working
+% with streaming data in |streamingDataExample|.
+%
+% tenderinfo is already available in rit, as tenderinfo_1, so we can use
+% that property to trigger an action.
+%
+% Let's create a strategy to accept or reject the tender offer based on the
+% current bid/ask price and the tender offer price.
+%
+% First let's subscribe to CRZY and TAME's bid/ask prices
+subscribe(rit,{'CRZY|BID';'CRZY|ASK';'TAME|BID';'TAME|ASK'})
+
+%% My Strategy
+% Create a buy/sell tender offer strategy in |myTenderStrategy|.  The
+% function is
+type myTenderStrategy
+
+%%
+% What we created here was a function that will print to the command window
+% the the action taken with each tender offer we receive. The input in this
+% case is the |rotmanTrader| variable.  Let's add the cunction to
+% |rotmanTrader| and watch it execute our strategy
+subscribe(rit,{'CRZY|POSITION';'TAME|POSITION'})
+fcn = @(input) myTenderStrategy(input);
+%%
+% Now add it to the list of updateFcns and it will be executed every time
+% there is an update.
+addUpdateFcn(rit,fcn)
+rit
+
+%%
+% We will also manage our position by reversing any open positions in the
+% market immediately
+type myPositionManagementStrategy
+%%
+% Now add it to rit
+fcn2 = @(input) myPositionManagementStrategy(input);
+addUpdateFcn(rit,fcn2)
+rit
+%% Watch Strategy Run
+% pause is used here to capture any offers before stopping.  Let's pause
+% for the time remaining in this round and watch our strategy run.
+pause(rit.timeRemaining) % check again in 10 seconds)
+
+%% Cleaning Up
+% To properly clean up, you first need to delete the |rotmanTrader|
+% connection before clearing it from the workspace.  This stops the updates
+% and disconnect from Rotman Interactive Trader.
+delete(rit)
+clear rit
+%%
+% We now no longer have a connection.
+##### SOURCE END #####
+--></body></html>

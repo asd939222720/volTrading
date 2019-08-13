@@ -1,0 +1,9 @@
+Run 'AutonTrade.m' befor subheat or in the subheat.
+
+If program goes wrong, press Ctrl+C in Matlab (may besevral times) to terminate the program and then rerun it.
+
+When subheat ends, the program is supposed terminates itself. If not, terminate it manully.
+
+Rerun 'AutonTrade.m' before next sub heat.
+
+Open P&L Charting in RIT.

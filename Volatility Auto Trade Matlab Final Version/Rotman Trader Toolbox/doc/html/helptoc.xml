@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!--- Copyright 2015-2018 The MathWorks, Inc. -->
+<toc version="2.0">
+    <tocitem target="GettingStarted.html">Rotman Trader Toolbox
+        <tocitem target="Examples.html"> Example Scripts
+            <tocitem target="tradingExample.html">Trading with Rotman Interactive Trader</tocitem>
+            <tocitem target="streamingDataExample.html">Streaming Data from Rotman Interactive Trader to MATLAB</tocitem> 
+            <tocitem target="tenderExample.html">Working with Tender Offers in MATLAB</tocitem>
+        </tocitem>
+        <tocitem target="FunctionList.html">Functions
+            <tocitem target="rotmanTrader.html">rotmanTrader</tocitem>
+            <tocitem target="RTDConnector.html">RTDConnector</tocitem>
+        </tocitem>
+        <!-- Optional link or links to your or other Web sites -->
+        <tocitem target="http://www.mathworks.com/academia/student-competitions/rotman-trading/index.html" 
+                 image="$toolbox/matlab/icons/webicon.gif"> Student Competition Information
+        </tocitem>
+        <tocitem target="http://www.mathworks.com/products/trading/" 
+                 image="$toolbox/matlab/icons/webicon.gif"> Trading Toolbox Product Information
+        </tocitem>
+    </tocitem>
+</toc>

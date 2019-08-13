@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<demos>
+    <name>Rotman Trader</name>
+    <type>toolbox</type>
+    <icon>HelpIcon.DEMOS</icon>
+    <description>Rotman Trader Toolbox Demos and Examples</description>
+    <website><a href="http://www.mathworks.com/products/trading/">Trading Toolbox</a></website>
+    
+    <demosection>
+        <label>Illustrative MATLAB Example Scripts</label>
+        <demoitem>
+            <label>Trading with Rotman Interactive Trader</label>
+            <type>M-file</type>
+            <source>tradingExample</source>
+        </demoitem>
+        <demoitem>
+            <label>Streaming Data from Rotman Interactive Trader to MATLAB</label>
+            <type>M-file</type>
+            <source>streamingDataExample</source>
+        </demoitem>
+        <demoitem>
+            <label>Working with Tender Offers in MATLAB</label>
+            <type>M-file</type>
+            <source>tenderExample</source>
+        </demoitem>
+    </demosection>
+</demos>

@@ -1,0 +1,87 @@
+function [currentPositions, isTraded] = ExcuteTrades(rit,trades, priceTable, newsInfo, tick, currentPositions)
+isTraded = false;
+
+AmountLimitPerTrade = 100;
+ETFGrossLimit = 50000;
+i = 1;
+while i <= length(trades)
+    %% Pair Trades
+    if length(trades)>i && ~strcmp(trades(i).BuyOrSell, trades(i+1).BuyOrSell)
+        if sum(abs(currentPositions.Data(2:end)))>2300
+            i = i+2;
+            continue;
+        end
+        if (sum(currentPositions.Data(2:end))<0 && strcmp(trades(i).BuyOrSell,'Buy'))
+            tradeID = buy(rit, trades(i).Ticker, trades(i).Amount);
+            tradeID = buy(rit, trades(i+1).Ticker, -trades(i+1).Amount);
+        elseif (sum(currentPositions.Data(2:end))>=0 && strcmp(trades(i).BuyOrSell,'Sell'))
+            tradeID = buy(rit, trades(i).Ticker, -trades(i).Amount);
+            tradeID = buy(rit, trades(i+1).Ticker, trades(i+1).Amount);
+        elseif (sum(currentPositions.Data(2:end))<0 && strcmp(trades(i).BuyOrSell,'Sell'))
+            tradeID = buy(rit, trades(i+1).Ticker, trades(i+1).Amount);
+            tradeID = buy(rit, trades(i).Ticker, -trades(i).Amount);
+        elseif (sum(currentPositions.Data(2:end))>=0 && strcmp(trades(i).BuyOrSell,'Buy'))    
+            tradeID = buy(rit, trades(i+1).Ticker, -trades(i+1).Amount);
+            tradeID = buy(rit, trades(i).Ticker, trades(i).Amount);
+        end
+        i = i + 2;
+        continue;
+    end
+    %%
+    beyoudETFLimit = 0;    
+    trade = trades(i);
+    unfinishedAmount = trade.Amount;
+    for j = 1 : 12
+        if unfinishedAmount <= 0
+            break
+        end
+%         positionInfo = GetPositions(rit, positionVarNames, tickerNames);
+        
+        amount = min(unfinishedAmount, AmountLimitPerTrade);
+        if strcmp(trade.BuyOrSell, 'Sell')
+            amount = - amount;
+        end
+         
+        
+        
+        currentDelta = GetPortfolioDelta(currentPositions,priceTable,newsInfo,tick);
+        futurePositions = currentPositions;
+        futurePositions.Data(trade.Ticker) = futurePositions.Data(trade.Ticker) + amount;
+        futureDelta = GetPortfolioDelta(futurePositions,priceTable,newsInfo,tick);
+        deltaToHedge = futureDelta - currentDelta;
+        if deltaToHedge > 0 && ETFGrossLimit + currentPositions.Data('RTM') < deltaToHedge + ETFGrossLimit/10
+            disp('Not enough ETF limit for open option trades');
+            beyoudETFLimit = 1;
+            break;
+        end
+        if deltaToHedge < 0 && ETFGrossLimit - currentPositions.Data('RTM') < - deltaToHedge + ETFGrossLimit/10
+            disp('Not enough ETF limit for open option trades');
+            beyoudETFLimit = 1;
+            break;
+        end
+        
+        
+        try
+            tradeID = buy(rit, trade.Ticker, amount);
+%             update(rit);
+            currentPositions.Data(trade.Ticker) = currentPositions.Data(trade.Ticker) + amount;
+            unfinishedAmount = unfinishedAmount - abs(amount);
+%             disp(['Trade Succes. ID: ' num2str(tradeID)]);
+            
+            currentDelta = GetPortfolioDelta(currentPositions,priceTable,newsInfo,tick);
+            currentPositions = HedgeDelta(rit, currentDelta, currentPositions);
+            hedgedDelta = GetPortfolioDelta(currentPositions,priceTable,newsInfo,tick);
+                        
+        catch e
+            disp(['Trade Fail. Error: ' e]);
+        end
+    end
+    
+    if beyoudETFLimit == 1
+        break;
+    end
+    i = i + 1;
+end
+
+
+end
